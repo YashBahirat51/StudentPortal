@@ -1,0 +1,17 @@
+package com.app.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AttendanceService {
+
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
+    public List<Attendance> saveAllAttendances(List<Attendance> attendances) {
+        return attendanceRepository.saveAll(attendances);
+    }
+}

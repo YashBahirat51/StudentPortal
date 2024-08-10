@@ -1,0 +1,66 @@
+package com.app.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.app.entities.Admin;
+import com.app.entities.Faculty;
+import com.app.entities.Student;
+import com.app.service.AdminService;
+import com.app.service.FacultyService;
+import com.app.service.StudentService;
+
+@RestController
+@RequestMapping("/api/admin")
+public class AdminController {
+
+    @Autowired
+    private AdminService adminService;
+
+    @Autowired
+    private StudentService studentService;
+
+    @Autowired
+    private FacultyService facultyService;
+    @Autowired
+    private AttendanceService attendanceService;
+
+    @Autowired
+    private DailyAttendanceSheetService dailyAttendanceSheetService;
+
+    @PostMapping("/mark-attendance")
+    public ResponseEntity<DailyAttendanceSheet> markAttendance(@RequestParam LocalDate date, @RequestBody List<Attendance> attendances) {
+        List<Attendance> savedAttendances = attendanceService.saveAllAttendances(attendances);
+        DailyAttendanceSheet dailySheet = dailyAttendanceSheetService.createOrUpdateDailySheet(date, savedAttendances);
+        return ResponseEntity.ok(dailySheet);
+    }
+    @PostMapping("/register")
+    public ResponseEntity<Admin> registerAdmin(@RequestBody Admin admin) {
+        Admin savedAdmin = adminService.saveAdmin(admin);
+        return ResponseEntity.ok(savedAdmin);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Admin> getAdminByEmail(@PathVariable String email) {
+        Admin admin = adminService.getAdminByEmail(email);
+        return ResponseEntity.ok(admin);
+    }
+
+    @PostMapping("/add-student")
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        Student savedStudent = studentService.saveStudent(student);
+        return ResponseEntity.ok(savedStudent);
+    }
+
+    @PostMapping("/add-faculty")
+    public ResponseEntity<Faculty> addFaculty(@RequestBody Faculty faculty) {
+        Faculty savedFaculty = facultyService.saveFaculty(faculty);
+        return ResponseEntity.ok(savedFaculty);
+    }
+}

@@ -1,0 +1,20 @@
+package com.app.service;
+package com.app.service;
+
+import com.app.model.Assignment;
+import com.app.repository.AssignmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AssignmentService {
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
+    public Assignment addAssignment(Assignment assignment) {
+        return assignmentRepository.save(assignment);
+    }
+
+    // Other methods for managing assignments
+}
+

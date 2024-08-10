@@ -1,0 +1,4 @@
+package com.app.dao;
+
+public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
+}

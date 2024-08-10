@@ -1,0 +1,15 @@
+package com.app.config;
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.cors().configurationSource(request -> {
+        CorsConfiguration cors = new CorsConfiguration();
+        cors.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // Update with your frontend URL
+        cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        cors.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        return cors;
+    }).and().csrf().disable()
+        .authorizeRequests()
+        .antMatchers("/api/auth/**", "/api/admin/**").permitAll()
+        .anyRequest().authenticated();
+    return http.build();
+}

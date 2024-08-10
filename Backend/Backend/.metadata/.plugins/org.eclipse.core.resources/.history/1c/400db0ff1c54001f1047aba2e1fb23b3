@@ -1,0 +1,55 @@
+package com.app.controller;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.app.entities.Admin;
+import com.app.entities.Faculty;
+import com.app.service.FacultyService;
+
+@RestController
+@RequestMapping("/api/faculties")
+public class FacultyController {
+
+    @Autowired
+    private FacultyService facultyService;
+
+    @PostMapping
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        return ResponseEntity.ok(facultyService.saveFaculty(faculty));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Faculty>> getAllFaculties() {
+        return ResponseEntity.ok(facultyService.getAllFaculties());
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Faculty> getFacultyByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(facultyService.getFacultyByEmail(email));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
+        facultyService.deleteFaculty(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Faculty faculty) {
+        Faculty existingfaculty = facultyService.getFacultyByEmail(faculty.getEmail());
+        if (existingfaculty != null && existingfaculty.getPassword().equals(faculty.getPassword())) {
+            // In a real application, generate a token and return it
+            return ResponseEntity.ok("Login successful"); // Placeholder response
+        } else {
+            return ResponseEntity.status(401).body("Invalid email or password");
+        }
+    }
+}
